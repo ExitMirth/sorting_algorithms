@@ -1,52 +1,42 @@
 #include "sort.h"
 
 /**
- * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
- * @h: pointer to head of the doubly-linked list.
- * @n1: pointer to first node to swap.
- * @n2: second node to swap.
- */
-void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
-{
-	(*n1)->next = n2->next;
-	if (n2->next != NULL)
-		n2->next->prev = *n1;
-	n2->prev = (*n1)->prev;
-	n2->next = *n1;
-
-	if ((*n1)->prev != NULL)
-		(*n1)->prev->next = n2;
-
-	else
-		*h = n2;
-
-	(*n1)->prev = n2;
-	*n1 = n2->prev;
-}
-
-/**
- * insertion_sort_list - Sorts doubly linked list of integers
- *                       using the insertion sort algorithm.
- * @list: A pointer to head of a doubly-linked list of integers.
- *
- * Description: Prints list after each swap.
+ * insertion_sort_list - Sorts a doubly linked list of ints
+ *                       in ascending order using Insertion sort algorithm.
+ * @list: Double pointer to head of doubly linked list.
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *iter, *insert, *tmp;
+    if (!list || !*list || !(*list)->next)
+        return;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
-		return;
+    listint_t *current, *key, *prev;
 
-	for (iter = (*list)->next; iter != NULL; iter = tmp)
-	{
-		tmp = iter->next;
-		insert = iter->prev;
+    current = (*list)->next;
 
-		while (insert != NULL && iter->n < insert->n)
-		{
-			swap_nodes(list, &insert, iter);
-			print_list((const listint_t *)*list);
-		}
-	}
+    while (current)
+    {
+        key = current;
+        prev = current->prev;
+
+        while (prev && prev->n > key->n)
+        {
+            /* Swap nodes */
+            if (key->next)
+                key->next->prev = prev;
+            prev->next = key->next;
+            key->prev = prev->prev;
+            key->next = prev;
+            prev->prev = key;
+
+            if (key->prev)
+                key->prev->next = key;
+            else
+                *list = key;
+
+            print_list(*list);
+            prev = key->prev;
+        }
+        current = current->next;
+    }
 }
