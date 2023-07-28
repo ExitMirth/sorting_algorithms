@@ -1,46 +1,52 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "sort.h"
+#include <stdlib.h>
 
 /**
- * radix_sort - Sorts array of ints in ascending order using Radix sort.
- * @array: Array to be sorted.
- * @size: Size of array.
+ * radix_sort - Sorts an array of integers in ascending order using Radix sort.
+ * @array: The array to be sorted.
+ * @size: The size of the array.
  */
 void radix_sort(int *array, size_t size)
 {
-    if (array == NULL || size < 2)
-        return;
+	size_t i;
+	int max_value;
+	int exp = 1;
+	int *output;
+	int count[10] = {0};
 
-    int max_value = array[0];
-    for (size_t i = 1; i < size; i++) {
-        if (array[i] > max_value)
-            max_value = array[i];
-    }
+	if (array == NULL || size < 2)
+		return;
 
-    int exp = 1;
-    int *output = malloc(size * sizeof(int));
-    if (output == NULL)
-        return;
+	max_value = array[0];
 
-    while (max_value / exp > 0) {
-        int count[10] = {0};
+	for (i = 1; i < size; i++)
+	{
+		if (array[i] > max_value)
+			max_value = array[i];
+	}
 
-        for (size_t i = 0; i < size; i++)
-            count[(array[i] / exp) % 10]++;
+	output = (int *)malloc(size * sizeof(int));
 
-        for (int i = 1; i < 10; i++)
-            count[i] += count[i - 1];
+	if (output == NULL)
+		return;
 
-        for (int i = size - 1; i >= 0; i--)
-            output[--count[(array[i] / exp) % 10]] = array[i];
+	while (max_value / exp > 0)
+	{
+		for (i = 0; i < size; i++)
+			count[(array[i] / exp) % 10]++;
 
-        for (size_t i = 0; i < size; i++)
-            array[i] = output[i];
+		for (i = 1; i < 10; i++)
+			count[i] += count[i - 1];
 
-        print_array(array, size);
-        exp *= 10;
-    }
+		for (i = size; i > 0; i--)
+			output[--count[(array[i - 1] / exp) % 10]] = array[i - 1];
 
-    free(output);
+		for (i = 0; i < size; i++)
+			array[i] = output[i];
+
+		print_array(array, size);
+		exp *= 10;
+	}
+
+	free(output);
 }
