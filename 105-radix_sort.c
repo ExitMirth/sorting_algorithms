@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 /**
- * radix_sort - Sorts an array of integers in ascending order using Radix sort.
- * @array: The array to be sorted.
- * @size: The size of the array.
+ * radix_sort - Sorts array of ints in ascending order using Radix sort.
+ * @array: Array to be sorted.
+ * @size: Size of array.
  */
 void radix_sort(int *array, size_t size)
 {
@@ -32,6 +32,9 @@ void radix_sort(int *array, size_t size)
 
 	while (max_value / exp > 0)
 	{
+		for (i = 0; i < 10; i++)
+			count[i] = 0;
+
 		for (i = 0; i < size; i++)
 			count[(array[i] / exp) % 10]++;
 
